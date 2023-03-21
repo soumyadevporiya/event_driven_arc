@@ -3,6 +3,7 @@ from flask import Flask
 from flask import jsonify
 import json
 from kafka import KafkaConsumer
+import time
 
 # Required for Kubernetes POD Management, ensure RBAC authorisation is configured
 import os
@@ -36,12 +37,7 @@ for message in consumer:
     namespace = 'default'
     pod_name = 'my-dataflow-pod'
 
-    while True:
-        resp = v1.read_namespaced_pod(name=pod_name, namespace='default')
-        if resp.status.phase == 'Succeeded':
-            break
 
-    delete_response = v1.delete_namespaced_pod(name=pod_name, namespace=namespace)
 
     image = 'gcr.io/mimetic-parity-378803/dataflow_pipeline:latest'
     container = V1Container(name=container_name, image=image)
@@ -63,6 +59,13 @@ for message in consumer:
         #details = "POD Created"
 
     #print(jsonify({"message": "POD Details ", "Information: ": details}))
+    
+    while True:
+        resp = v1.read_namespaced_pod(name=pod_name, namespace='default')
+        if resp.status.phase == 'Succeeded':
+            break
+
+    delete_response = v1.delete_namespaced_pod(name=pod_name, namespace=namespace)
 
 
     #'''
