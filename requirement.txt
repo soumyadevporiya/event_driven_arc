@@ -1,0 +1,5 @@
+flask
+pint
+kubernetes
+bs4
+kafka-python
