@@ -29,13 +29,19 @@ for message in consumer:
     
     #'''
     
-   
     config.load_incluster_config()
     v1 = kubernetes.client.CoreV1Api()
 
     container_name = 'data-flowcontainer'
     namespace = 'default'
     pod_name = 'my-dataflow-pod'
+
+    while True:
+        resp = v1.read_namespaced_pod(name=pod_name, namespace='default')
+        if resp.status.phase == 'Succeeded':
+            break
+
+    delete_response = v1.delete_namespaced_pod(name=pod_name, namespace=namespace)
 
     image = 'gcr.io/mimetic-parity-378803/dataflow_pipeline:latest'
     container = V1Container(name=container_name, image=image)
@@ -51,19 +57,13 @@ for message in consumer:
             break
         time.sleep(1)
 
-    ret = v1.read_namespaced_pod(pod_name, namespace)
+    #ret = v1.read_namespaced_pod(pod_name, namespace)
 
-    if ret:
-        details = "POD Created"
+    #if ret:
+        #details = "POD Created"
 
-    print(jsonify({"message": "POD Details ", "Information: ": details}))
+    #print(jsonify({"message": "POD Details ", "Information: ": details}))
 
-    while True:
-        resp = v1.read_namespaced_pod(name=pod_name, namespace='default')
-        if resp.status.phase == 'Succeeded':
-            break
-        time.sleep(1)
 
-    delete_response = v1.delete_namespaced_pod(name=pod_name,namespace=namespace)
-    # '''
+    #'''
 consumer.close()
