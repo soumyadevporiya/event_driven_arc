@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: podmanager
+  name: event-driven-arc
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: podmanager
+      app: event-driven-arc
   template:
       metadata:
         labels:
-          app: podmanager
+          app: event-driven-arc
       spec:
         containers:
-        - name: podmanager
-          image: gcr.io/mimetic-parity-378803/flask_manage_pods:latest
+        - name: event-driven-arc
+          image: gcr.io/mimetic-parity-378803/event_driven_architecture:latest

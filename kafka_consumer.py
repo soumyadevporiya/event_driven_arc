@@ -24,6 +24,10 @@ for message in consumer:
     my_json = message_1.decode('utf8')
     print(my_json)
 
+    
+    
+    
+    
     config.load_incluster_config()
     v1 = kubernetes.client.CoreV1Api()
 
@@ -52,6 +56,12 @@ for message in consumer:
 
     print(jsonify({"message": "POD Details ", "Information: ": details}))
 
+    while True:
+        resp = v1.read_namespaced_pod(name=pod_name, namespace='default')
+        if resp.status.phase != 'Succeeded':
+            break
+        time.sleep(1)
 
+    delete_response = v1.delete_namespaced_pod(name=pod_name,namespace=namespace)
 
 consumer.close()
