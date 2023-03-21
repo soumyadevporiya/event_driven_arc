@@ -27,7 +27,9 @@ for message in consumer:
     
     
     
+    #'''
     
+   
     config.load_incluster_config()
     v1 = kubernetes.client.CoreV1Api()
 
@@ -58,10 +60,10 @@ for message in consumer:
 
     while True:
         resp = v1.read_namespaced_pod(name=pod_name, namespace='default')
-        if resp.status.phase != 'Succeeded':
+        if resp.status.phase == 'Succeeded':
             break
         time.sleep(1)
 
     delete_response = v1.delete_namespaced_pod(name=pod_name,namespace=namespace)
-
+    # '''
 consumer.close()
